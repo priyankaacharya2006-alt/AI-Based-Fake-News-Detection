@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fake News Detection</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      color: #172033;
+    }
+
+    header {
+      background: #173b68;
+      color: white;
+      text-align: center;
+      padding: 28px 15px;
+    }
+
+    header h1 {
+      margin: 0 0 10px;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 35px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px #00000012;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      padding: 14px;
+      font-size: 16px;
+      border: 1px solid #b8c5d6;
+      border-radius: 8px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 15px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      background: #1769d2;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #104fa5;
+    }
+
+    #result {
+      display: none;
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 8px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .warning {
+      background: #fff3cd;
+      border: 1px solid #e4c76a;
+    }
+
+    .info {
+      background: #e5f2ff;
+      border: 1px solid #8bbce9;
+    }
+
+    .examples {
+      margin-top: 24px;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .examples button {
+      width: auto;
+      margin: 5px 5px 0 0;
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #526176;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Fake News Detection</h1>
+    <p>Check a news headline or article</p>
+  </header>
+
+  <main>
+    <h2>Fake News detection</h2>
+    <p>"In the world where misinformation can spread rapidly, Our system aims to provide a reliable meansto distinguish between real and fake news."</p>
+
+    <label for="news">Enter news headline :</label>
+    <textarea id="news"
+      placeholder="Enter or paste your news here..."></textarea>
+
+    <button onclick="Check News()">Check News</button>
+    <p>Input the hearline of the news,articles you want to verify.</p>
+    <div id="result" role="status" aria-live="polite"></div>
+
+    <div class="examples">
+      <strong>Try an example:</strong><br>
+      <button onclick="useExample(1)">Example 1</button>
+      <button onclick="useExample(2)">Example 2</button>
+      <button onclick="useExample(3)">Example 3</button>
+      <button onclick="useExample(4)">Example 4</button>
+      <button onclick="useExample(5)">Example 5</button>
+      <button onclick="useExample(6)">Example 6</button>
+      <button onclick="useExample(7)">Example 7</button>
+      <button onclick="useExample(8)">Example 8</button>
+    </div>
+  </main>
+
+  <footer>
+    Educational demonstration only — always verify news with
+    reliable sources.
+  </footer>
+
+  <script>
+    function useExample(number) {
+      const news = document.getElementById("news");
+
+      if (number === 1) {
+        news.value =
+          "BREAKING! Share this immediately! " +
+          "A secret miracle cure is guaranteed for everyone!",false;
+         }
+      else if (number === 2) {
+        news.value =
+          "The local school published its annual examination schedule.",true;
+         } 
+      else if (number === 3) {
+       news.value =
+       "2  workers die after inhaling toxic fumes at gujarat factory."true;
+      }
+      else if (number === 4) {
+      news.value =
+      "IPL 2026 final match shifed from bengaluru to ahmedabad.",true;
+      } 
+     else if (number === 5) {
+      news.value =
+      "TikTok videos and social media ads claimed that drinking a simple mix of pink Himalayan salt and water from your pantry would cause rapid, dramatic weight loss.",false;
+      } 
+     else if (number === 6){
+      news.value =
+      "Social media posts or satirical blogs claiming that eating a kilogram of chocolate a day drastically improves your memory and brain function.",false;
+      } 
+     else if (number ===7) {
+      news.vaue =
+      "Indian women assume  medal in archery world cup.",true;
+      }
+      else {
+      news.value =
+      "Two young cousins in England took photographs of paper cutout fairies dancing on tree branches and convinced famous people (including Sherlock Holmes creator Sir Arthur Conan Doyle) that real fairies existed.",false;
+      }
+
+        checkNews();
+    }
+
+    function checkNews() {
+      const text = document.getElementById("news").value.trim();
+      const result = document.getElementById("result");
+
+      result.style.display = "block";
+
+      if (text.length < 10) {
+        result.className = "warning";
+        result.textContent =
+          "Please enter a news headline or a longer article.";
+        return;
+      }
+
+      const suspiciousPhrases = [
+        "share this immediately",
+        "guaranteed for everyone",
+        "secret miracle cure",
+        "100% guaranteed",
+        "you won't believe",
+        "forward to everyone"
+      ];
+
+      const normalized = text.toLowerCase();
+
+      const matches = suspiciousPhrases.filter(
+        phrase => normalized.includes(phrase)
+      );
+
+      if (matches.length > 0) {
+        result.className = "warning";
+        result.innerHTML =
+          "<strong>Warning: Something wrong is detected</strong>" +
+          "<br>News headline is -> fake";
+      } else {
+        result.className = "info";
+        result.innerHTML =
+          "<strong>Result: Verification is done</strong>" +
+          "<br>News headline is -> true";
+      }
+
+      result.innerHTML +=
+        "<br><br><small>Demo only: this tool use a " +
+        "trained AI model and can establish whether the news is true or not.</small>";
+    }
+  </script>
+</body>
+</html>
